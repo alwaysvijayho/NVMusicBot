@@ -1,16 +1,24 @@
 import os
-from pyrogram import Client
+from flask import Flask
+from threading import Thread
 
-# Render ke environment se details lega
-api_id = os.environ.get("API_ID")
-api_hash = os.environ.get("API_HASH")
-bot_token = os.environ.get("BOT_TOKEN")
+# Flask server banaya (Render isse port dhundega)
+app = Flask(__name__)
 
-app = Client("Nvmusicbot", api_id=int(api_id), api_hash=api_hash, bot_token=bot_token)
+@app.route('/')
+def home():
+    return "Bot is alive!"
 
-@app.on_message()
-async def start(client, message):
-    await message.reply_text("Music Bot active hai!")
+def run():
+    # Render ka diya hua port use karna zaruri hai
+    port = int(os.environ.get("PORT", 10000))
+    app.run(host='0.0.0.0', port=port)
 
-print("Bot start ho raha hai...")
-app.run()
+# Pehle web server start karo
+t = Thread(target=run)
+t.start()
+
+# Ab apna bot ka code yahan se shuru karo
+# (Niche apna baaki bot ka code likho)
+import asyncio
+# ... (aapka bot ka original code)
